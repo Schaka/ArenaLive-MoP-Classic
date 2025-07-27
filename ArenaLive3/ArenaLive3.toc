@@ -1,0 +1,7 @@
+## Interface: 50500
+## Title: ArenaLive3 [Core]
+## Notes: Framework for ArenaLive.
+## Author: Schaka
+## Version: 1.0
+
+ArenaLive.xml

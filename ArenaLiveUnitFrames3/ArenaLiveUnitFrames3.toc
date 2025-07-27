@@ -1,0 +1,8 @@
+## Interface: 50500
+## Title: ArenaLive3 [UnitFrames]
+## Notes: Unit frames based on the concept of the ArenaLive Spectator UI.
+## Author: Vadrak
+## Version: 0.9beta
+## Dependencies: ArenaLive3
+## SavedVariables: ALUF_Database
+load.xml

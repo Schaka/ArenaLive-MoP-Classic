@@ -1,0 +1,25 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script File="DRTracker.lua" />
+	
+	<Frame name="ArenaLive_DrTrackerIconTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="2" y="2" />
+		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentTexture" file="Interface\Icons\INV_Misc_QuestionMark" parentKey="texture" />
+			</Layer>
+			<Layer level="OVERLAY">
+				<FontString name="$parentText" parentKey="text" inherits="ArenaLiveFont_StatusBarTextSmall">
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Cooldown name="$parentCooldown" inherits="ArenaLive_CooldownTemplate" reverse="true" parentKey="cooldown" />
+		</Frames>
+	</Frame>
+</Ui>
