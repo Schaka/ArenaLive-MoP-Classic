@@ -97,7 +97,6 @@ NamePlate:RegisterEvent("NAME_PLATE_UNIT_ADDED");
 NamePlate:RegisterEvent("NAME_PLATE_UNIT_REMOVED");
 
 -- Set Attributes:
-NamePlate.unitCache = {};
 NamePlate.unitNameCache = {};
 NamePlate.namePlates = {};
 
@@ -256,44 +255,6 @@ function NamePlate:UpdateNamePlate(namePlate)
 	namePlate:Update();
 end
 
-function NamePlate:PlateReactionIsUnitReaction(blizzPlate, unit)
-	local plateReaction = NamePlate:GetReactionType(blizzPlate.UnitFrame.healthBar:GetStatusBarColor());
-	local unitReaction = NamePlate:GetReactionType(UnitSelectionColor(unit));
-	local isPlayer = UnitIsPlayer(unit);
-	local _, _, _, _, teamID = ArenaLiveSpectator.UnitCache:GetUnitInfo(unit);
-	local _, gameType = IsSpectator();
-
-	if ( isPlayer and gameType == "battleground" and ( ( teamID == 1 and ( plateReaction == "Hostile-Player" or plateReaction == "Friendly" ) and unitReaction == "PvP-Friendly" ) or ( teamID == 0 and unitReaction == "Hostile" and plateReaction == "Hostile-Player" ) ) ) then
-		return true;
-	elseif ( isPlayer and gameType == "arena" and unitReaction == "Hostile" and plateReaction == "Hostile-Player" ) then
-		return true;
-	elseif ( not isPlayer and ( unitReaction == "Friendly" and plateReaction == "Hostile" ) ) then
-		return true;
-	elseif ( unitReaction == plateReaction ) then
-		return true;
-	else
-		return false;
-	end
-end
-
-function NamePlate:UpdateUnitCacheEntry(unit)
-	local oldName = self.unitCache[unit];
-	
-	-- Reset old name cache entry if necessary:
-	if ( oldName ) then
-		self.unitNameCache[oldName] = nil;
-	end
-	
-	-- Apply new name data to cache:
-	local name = GetUnitName(unit);
-	if ( name ) then
-		--ArenaLive:Message("NamePlate:UpdateUnitCacheEntry(): Called for unit %s, name = %s", "debug", "NamePlate:UpdateUnitCacheEntry()", unit, tostring(name));
-		self.unitCache[unit] = name;
-		self.unitNameCache[name] = unit;
-	end
-end
-
-
 function NamePlate:OnEvent(event, ...)
 	local unit = ...;
 	if ( ( event == "UNIT_ABSORB_AMOUNT_CHANGED" or event == "UNIT_HEAL_PREDICTION" ) ) then
@@ -309,17 +270,9 @@ function NamePlate:OnEvent(event, ...)
 	elseif ( event == "UNIT_AURA" ) then
 		for blizzPlate, namePlate in pairs(self.namePlates) do
 			if ( unit == namePlate.unit ) then
+                CCIndicator:UpdateCache("UNIT_AURA", unit, namePlate);
 				CCIndicator:Update(namePlate);
 			end
-		end
-	elseif ( event == "UNIT_NAME_UPDATE" ) then
-		NamePlate:UpdateUnitCacheEntry(unit);
-		NamePlate:UpdateAll();
-	elseif ( event == "UNIT_PET" ) then
-		local unitType = string.match(unit, "^([a-z]+)[0-9]+$") or unit;
-		local unitNumber = string.match(unit, "^[a-z]+([0-9]+)$");
-		if ( not unitNumber ) then
-			return;
 		end
 	elseif ( event == "PLAYER_ENTERING_WORLD" ) then
         NamePlate:Enable();
@@ -331,91 +284,17 @@ function NamePlate:OnEvent(event, ...)
         local unit = ... -- nameplate1
         local unitFrame = C_NamePlate.GetNamePlateForUnit(unit, issecure())
         self:SetBlizzPlateStructure(unitFrame);
-
         unitFrame.unit = unit
         local namePlate = self.namePlates[unitFrame];
-        namePlate.unit = unit
-        namePlate:Update()
-        NamePlate:UpdateNamePlate(namePlate);
+        namePlate:UpdateUnit(unit);
+        namePlate:Update();
     elseif ( event == "NAME_PLATE_UNIT_REMOVED" ) then
         local unit = ... -- nameplate1
         local unitFrame = C_NamePlate.GetNamePlateForUnit(unit, issecure())
-        unitFrame.unit = unit
+        unitFrame.unit = nil
         local namePlate = self.namePlates[unitFrame];
-        namePlate.unit = unit
-        namePlate:Update()
-        NamePlate:UpdateNamePlate(namePlate);
-	end
-end
-
-local children;
-function ArenaLiveNamePlatesFrame:CrawlNamePlateData(nameplate)
-
-	local children = {nameplate:GetChildren()};
-	local regions = {nameplate:GetRegions()};
-	local i = 1;
-	
-	print(nameplate:GetParent():GetName());
-	for key, value in pairs(nameplate) do
-		print(tostring(key).." = "..tostring(value));
-	end
-	
-	for _, child in ipairs(children) do
-		local frameType = child:GetObjectType();
-		local subChildren = {child:GetChildren()}
-		local subRegions = {child:GetRegions()};
-		
-		print(tostring("Child"..tostring(i))..": FrameType = "..tostring(frameType));
-		
-		local subID = 1;
-		for _, subChild in ipairs(subChildren) do
-			local minvalue, maxvalue, value;
-			local objectType = subChild:GetObjectType();
-			if ( objectType == "StatusBar" ) then
-				minvalue, maxvalue = subChild:GetMinMaxValues();
-				value = subChild:GetValue();
-				local name = subChild:GetName();
-				local subsubchildren = subChild:GetNumChildren();
-				local subsubRegions = {subChild:GetRegions()};
-				print("     "..tostring("SubChild"..tostring(subID))..": FrameType = "..tostring(objectType).."; MinValue = "..tostring(minvalue).."; MaxValue = "..tostring(maxvalue).."; Value = "..tostring(value)..";");
-				subID = subID + 1; 
-				for key, subsubRegion in pairs(subsubRegions) do
-					local subsubRegionType = subsubRegion:GetObjectType();
-					if ( subsubRegionType == "FontString" ) then
-						local subsubText = subsubRegion:GetText();
-						print("          5:"..tostring(subsubText));
-					elseif ( subsubRegionType == "Texture" ) then
-						local subsubTexture = subsubRegion:GetTexture();
-						print("         ", key, ": "..tostring(subsubTexture));
-					end
-				end
-			end
-		end
-		
-		local subRegionID = 1;
-		for _, region in ipairs(subRegions) do
-			local regionType = region:GetObjectType();
-			local content;
-			
-			if ( regionType == "Texture" ) then
-				content = region:GetTexture();
-			elseif ( regionType == "FontString" ) then
-				content = region:GetText();
-			end
-			
-			print("     "..tostring("SubRegion")..tostring(subRegionID)..": RegionType = "..tostring(regionType).."; Content = "..tostring(content));
-			subRegionID = subRegionID + 1;
-		end
-		
-		i = i + 1;
-	end
-	
-	local regionID = 1;
-	for _, region in ipairs(regions) do
-		local regionName = region:GetName();
-		local regionType = region:GetObjectType();
-		print (tostring(regionName).."(Region"..tostring(subRegionID).."): RegionType = "..tostring(regionType));
-		regionID = regionID + 1;
+        namePlate:UpdateUnit(nil);
+        namePlate:Update();
 	end
 end
 
@@ -445,7 +324,12 @@ end
 function NamePlateClass:Update()
 	if ( self.enabled ) then
 		self:UpdateCastBar();
-		CCIndicator:Update(self);
+		if self.unit then
+		    CCIndicator:UpdateCache("UNIT_AURA", self.unit, self)
+		    CCIndicator:Update(self);
+		else
+            CCIndicator:Reset(self)
+        end
 		self:UpdateClassIcon();
 		self:UpdateHealthBar();
 		self:UpdateNameText()
@@ -468,7 +352,7 @@ function NamePlateClass:UpdateAppearance()
         end
 		
 		self.classIcon:Show();
-		
+
 		-- we need minimum 81.25% of the original height of the texture to display it, as in 104 of 128 pixels
         -- because textures get stretched, that means we need to display 416 (81.25%) pixel in width
         self.border:SetTexture("Interface\\AddOns\\ArenaLiveNamePlates3\\Textures\\PlayerNamePlateBig");
@@ -480,6 +364,7 @@ function NamePlateClass:UpdateAppearance()
 
         self.castBar:ClearAllPoints();
         self.castBar:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", 58, 16);
+
 	    --[[
 		local role = ArenaLiveSpectator.UnitCache:GetUnitRole(self.unit);
 		if ( role == "HEALER" ) then
@@ -488,6 +373,9 @@ function NamePlateClass:UpdateAppearance()
 			self.healerIcon:Hide();
 		end
         ]]
+
+        -- FIXME
+        self.healerIcon:Hide();
 	else
 		self:SetSize(137, 22);
 		if ( self.unit and UnitGUID(self.unit) == UnitGUID("target") ) then
@@ -497,7 +385,8 @@ function NamePlateClass:UpdateAppearance()
         end
 
 		self.classIcon:Hide();
-		
+		CCIndicator:Reset(self);
+
 		self.border:SetTexture("Interface\\AddOns\\ArenaLiveNamePlates3\\Textures\\NamePlateBorder");
 		self.border:SetTexCoord(0.28125, 0.81640625, 0.2421875, 0.5859375);
 
@@ -512,15 +401,14 @@ function NamePlateClass:UpdateAppearance()
 	end
 	
 	-- Set border colour:
-	local red, green, blue;
 	if ( self.unit ) then
 		local unitType = string.match(self.unit, "^([a-z]+)[0-9]+$") or self.unit;
-        red, green, blue = UnitSelectionColor(self.unit);
+        local red, green, blue = UnitSelectionColor(self.unit);
+        self.border:SetVertexColor(red, green, blue);
 	elseif blizzPlate.UnitFrame then
-		red, green, blue = blizzPlate.UnitFrame.healthBar:GetStatusBarColor();
+		local red, green, blue = blizzPlate.UnitFrame.healthBar:GetStatusBarColor();
+		self.border:SetVertexColor(red, green, blue);
 	end
-
-	self.border:SetVertexColor(red, green, blue);
 end
 
 function NamePlateClass:UpdateCastBar()
@@ -558,6 +446,7 @@ function NamePlateClass:UpdateCastBar()
 end
 
 function NamePlateClass:UpdateClassIcon()
+    local inInstance, gameType = IsInInstance()
     local isInPvP = gameType == "pvp" or gameType == "arena"
 
 	if ( isInPvP and self.unit and UnitIsPlayer(self.unit) ) then
@@ -635,25 +524,6 @@ function NamePlateClass:UpdateUnit(unit)
         self.CCIndicator.enabled = nil;
     end
 	self:UpdateAppearance();
-	self:UpdateGUID();
-end
-
-function NamePlateClass:UpdateGUID()
-	if ( self.unit ) then
-		local guid = UnitGUID(self.unit);
-		if ( not self.guid or guid ~= self.guid ) then
-			self.guid = guid;
-			if ( guid ) then
-				self:Update();
-			else
-				self:Reset();
-			end
-			
-		end
-	else
-		self.guid = nil;
-		self:Reset();
-	end
 end
 
 function NamePlateClass:OnShow()
