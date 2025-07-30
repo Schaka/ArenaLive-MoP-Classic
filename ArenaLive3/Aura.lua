@@ -144,7 +144,7 @@ function Aura:UpdateAuras(unitFrame, auraType)
 	
 	local isPlayer = UnitIsUnit("player", unit);
 	local canAssist = UnitCanAssist("player", unit);
-	local name, texture, count, dispelType, duration, expires, _, _, _, spellID, _, _, _, _, timeMod, shouldConsolidate
+	local name, texture, count, dispelType, duration, expires, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod, shouldConsolidate
 	
 	-- Get data according to aura type:
 	local auraFrame, filter, maxShown;
@@ -171,9 +171,9 @@ function Aura:UpdateAuras(unitFrame, auraType)
 		
 		-- Retrieve buff info:
 		if ( auraType == "BUFF" ) then
-			name, texture, count, dispelType, duration, expires, _, _, _, spellID, _, _, _, _, timeMod, shouldConsolidate = UnitBuff(unit, auraID, filter);
+			name, texture, count, dispelType, duration, expires, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod, shouldConsolidate = UnitBuff(unit, auraID, filter);
 		elseif ( auraType == "DEBUFF" ) then
-			name, texture, count, dispelType, duration, expires, _, _, _, spellID, _, _, _, _, timeMod, shouldConsolidate = UnitDebuff(unit, auraID, filter);
+			name, texture, count, dispelType, duration, expires, source, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod, shouldConsolidate = UnitDebuff(unit, auraID, filter);
 		end
 		
 		local icon = auraFrame["icon"..iconID];

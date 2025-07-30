@@ -240,7 +240,13 @@ function ArenaHeader:OnEvent(event, ...)
 		local numOpponents = GetNumArenaOpponents();
 		for header in pairs(headers) do
 			if ( header.enabled ) then
+
+                -- in BGs, this can be up to 40 (arena40 and arenapet40)
 				local unitNumber = tonumber(string.match(unit, "^[a-z]+([0-9]+)$"));
+				if unitNumber > NUM_MAX_ARENA_OPPONENTS then
+                    break
+                end
+
 				local frame = header["Frame"..unitNumber];
 				
 				if ( header:GetAttribute("numopponents") < numOpponents ) then

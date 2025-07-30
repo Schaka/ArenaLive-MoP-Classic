@@ -518,7 +518,7 @@ function NamePlateClass:UpdateUnit(unit)
     local isInPvP = gameType == "pvp" or gameType == "arena"
 
     self.unit = unit;
-    if ( unit and isInPvP ) then
+    if ( unit and isInPvP and UnitIsPlayer(unit) ) then
         self.CCIndicator.enabled = true;
     else
         self.CCIndicator.enabled = nil;

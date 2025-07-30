@@ -399,10 +399,10 @@ function Icon:SetTexture(frame, icon, iconType)
 			texture = select(4, GetSpecializationInfoForClassID(classID, specID));
 		elseif ( unitType == "player" or UnitIsUnit("player", unit) ) then
 			-- Spec icon for player:
-			specID = GetSpecialization();
+			specID = C_SpecializationInfo.GetSpecialization();
 			
 			if ( specID ) then
-				spellIcon = select(4, GetSpecializationInfo(specID));
+				spellIcon = select(4, C_SpecializationInfo.GetSpecializationInfo(specID));
 			end
 			
 		elseif ( unitType == "arena" ) then
@@ -413,7 +413,7 @@ function Icon:SetTexture(frame, icon, iconType)
 			if ( numOpps and unitNumber and unitNumber <= numOpps ) then
 				-- We're inside the arena and can track spec info:
 				specID = GetArenaOpponentSpec(unitNumber);
-				spellIcon = select(4, GetSpecializationInfoByID(specID));
+				spellIcon = select(4, C_SpecializationInfo.GetSpecializationInfo(specID));
 			elseif ( faction and instanceType ~= "arena" ) then
 				-- This is the case if we're in a Flag BG. "arena" unitIDs show the flag carrier in these BGs since MoP:
 				spellIcon = "Interface\\TargetingFrame\\UI-PVP-"..faction;
