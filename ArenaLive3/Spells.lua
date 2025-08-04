@@ -48,20 +48,89 @@ ArenaLive.spellDB = {
 			["CCIndicator"] = { -- This table is used to track those spells, that are shown in the cc indcator.
 				-- The order is [spellID] = Priority-Type.
 
+				-- Racials
+				[20594] = "usefulBuffs",    -- Stoneform
+				[20549] = "stun",           -- War Stomp
+				[28730] = "silence",        -- Arcane Torrent
+				[25046] = "silence",        -- Arcane Torrent
+				[50613] = "silence",        -- Arcane Torrent
+				[129597] = "silence",        -- Arcane Torrent
+				[107079] = "silence",       -- Quaking Palm (Pandarian)
+
+				-- Other
+				[13099] = "root", -- Net-o-Matic
+                [13119] = "root", -- Net-o-Matic
+                [13120] = "root", -- Net-o-Matic
+                [13138] = "root", -- Net-o-Matic
+                [13139] = "root", -- Net-o-Matic
+                [16566] = "root", -- Net-o-Matic
+                [23723] = "offCD", -- Mind Quickening Gem
+                [30456] = "defCD", -- Nigh-Invulnerability
+                [30457] = "crowdControl", -- Complete Vulnerability
+                [23451] = "offCD", -- Battleground Speed buff
+                [23493] = "defCD", -- Battleground Heal buff
+                [23505] = "offCD", -- Battleground Damage buff
+                [6615] = "offCD", -- Free Action Potion
+                [24364] = "offCD", -- Living Action Potion
+                [3169] = "defCD", -- Limited Invulnerability Potion
+                [16621] = "defCD", -- Invulnerable Mail
+                [1090] = "crowdControl", -- Magic Dust
+                [13327] = "crowdControl", -- Reckless Charge
+                [835] = "crowdControl", -- Tidal Charm
+                [11359] = "offCD", -- Restorative Potion
+                [5024] = "offCD", -- Skull of Impending Doom
+                [2379] = "offCD", -- Swiftness Potion
+                [5134] = "crowdControl", -- Flash Bomb
+                [23097] = "offCD", -- Fire Reflector
+                [23131] = "offCD", -- Frost Reflector
+                [23132] = "offCD", -- Shadow Reflector
+                [19769] = "crowdControl", -- Thorium Grenade
+                [4068] = "crowdControl", -- Iron Grenade
+                [23506] = "defCD", -- Arena Grand Master trinket
+                [29506] = "defCD", -- Burrower's Shell trinket
+                [12733] = "offCD", -- Blacksmith trinket, Fear immunity
+                [15753] = "crowdControl", -- Linken's Boomerang Stun
+                [14530] = "offCD", -- Nifty Stopwatch
+                [13237] = "crowdControl", -- Goblin Mortar trinket
+                [14253] = "offCD", -- Black Husk Shield
+                [9175] = "offCD", -- Swift Boots
+                [13141] = "offCD", -- Gnomish Rocket Boots
+                [8892] = "offCD", -- Goblin Rocket Boots
+                [9774] = "offCD", -- Spider Belt & Ornate Mithril Boots
+                [18798] = "crowdControl", -- Freezing Band
+                [22734] = "usefulBuffs", -- Drink
+                [46755] = "usefulBuffs", -- Drink
+                [27089] = "usefulBuffs", -- Drink
+                [43183] = "usefulBuffs", -- Drink
+                [57073] = "usefulBuffs", -- Drink
+                [23605] = "usefulBuffs", -- Nightfall, Spell Vulnerability
+                [13494] = "offCD", -- Manual Crowd Pummeler Haste buff
+                
+                -- MoP
+                [129597] = "crowdControl", -- Arcane Torrent (Chi)
+                [126679] = "offCD", -- Call of Victory
+                [126690] = "offCD", -- Call of Conquest
+                [126683] = "offCD", -- Call of Dominance
+
 				-- Death Knight
+				[45524] = "root",			-- Chains of Ice
+				[96294] = "root",			-- Chains of Ice (Chilblains)
+				[50435] = "root",			-- Chilblains
 				[48707] = "defCD",			-- Anti-Magic Shell
 				[48792] = "defCD",			-- Icebound Fortitude
-				[115018] = "usefulBuffs", 	-- Desecrated Ground
+				[115018] = "defCD", 	    -- Desecrated Ground
 				[77606] = "offCD", 			-- Darm Sim
 				[49039] = "defCD",			-- Lichborne
 				[51271] = "offCD", 			-- Pillar of Frost
 				[49016] = "offCD",			-- Unholy Frenzy
 				[91800] = "stun",			-- Gnaw (Petstun)
+				--[91802] = "interrupt",	-- Shambling Rush (pet kick)
+				[91807] = "root",	        -- Shambling Rush (pet root)
+				[47484] = "defCD",			-- Huddle
 				[91797] = "stun", 			-- Monstrous Blow (Petstun)
 				[115001] = "stun",			-- Remorseless Winter (stun)
 				[108194] = "stun",			-- Asphyxiate
 				[47476] = "silence",		-- Strangulate
-				[96294] = "root",			-- Chains of Ice (root)
 				[91807] = "root", 			-- Pet Leap Root
 				[115001] = "stun",			-- Remorseless
 				[73975] = "usefulBuffs",	-- Necrotic Wound
@@ -180,6 +249,8 @@ ArenaLive.spellDB = {
 				-- Paladin
 				[498] = "defCD",			-- Divine Protection
 				[642] = "defCD",			-- Divine Shield
+				[54428] = "usefulBuffs",	-- Divine Plea
+				[20170] = "usefulDebuffs",	-- Seal of Justice slow
 				[31884] = "offCD",			-- Avenging Wrath
 				[105593] = "stun",			-- Fist of Justice
 				[853] = "stun",				-- Hammer of Justice
@@ -194,7 +265,7 @@ ArenaLive.spellDB = {
 				[1044] = "usefulBuffs",     -- Hand of Freedom
 				[6940] = "defCD",           -- Hand of Sacrifice
 				[20066] = "crowdControl",   -- Repentance
-				[31821] = "usefulBuffs",    -- Devotion Aura
+				[31821] = "usefulBuffs",    -- Aura Mastery
 				[31850] = "defCD",          -- Ardent Defender
 				[31884] = "offCD",          -- Avenging Wrath
 				[31842] = "usefulBuffs",    -- Divine Favor
@@ -209,6 +280,8 @@ ArenaLive.spellDB = {
 				[113506] = "defCD", 		-- Cyclone (Symbiosis) (Made that one a def CD, because the enemy is immune to everything during cyclone)
 				[33206] = "defCD",			-- Pain Suppression
 				[17] = "usefulBuffs",	    -- Power Word: Shield
+				[64843] = "usefulBuffs",	-- Divine Hymn
+				[64901] = "usefulBuffs",	-- Hymn of Hope
 				[47788] = "defCD",			-- Guardian Spirit
 				[47585] = "defCD",			-- Dispersion
 				[10060] = "offCD",			-- Power Infusion
@@ -249,6 +322,9 @@ ArenaLive.spellDB = {
 				
 				-- Shaman
 				[113288] = "silence", 		-- Solar Beam (Symbiosis
+				[16191] = "usefulBuffs", 	-- Mana Tide
+				[5394] = "usefulBuffs", 	-- Healing Stream
+				[119523] = "usefulBuffs", 	-- Healing Stream
 				[79206] = "usefulBuffs",	-- Spiritwalker's Grace
 				[30823] = "defCD",			-- Shamanistic Rage
 				[108281] = "defCD",			-- Ancestral Guidance
@@ -268,7 +344,9 @@ ArenaLive.spellDB = {
 				[76780] = "crowdControl",	-- Bind Elemental
 				[63685] = "root",			-- Frost Shock (including Frozen Power)
 				[64695] = "root",			-- Earthgrab Totem
-				
+				[16188] = "defCD",			-- NS
+				[58861] = "stun",			-- Bash (Spirit Wolf)
+
 				-- Warlock
 				[710] = "defCD",			-- Banish (It is marked as def CD for the same reason as Cyclone)
 				[113858] = "offCD",			-- Dark Soul: Instability
@@ -284,11 +362,15 @@ ArenaLive.spellDB = {
 				[111397] = "defCD", 		-- Blood Horror (buff)
 				[137143] = "crowdControl",	-- Blood Horror
 				[5484] = "crowdControl",	-- Howl of Terror
+				[5782] = "crowdControl",	-- Fear
+				[130616] = "crowdControl",	-- Fear (Glyph)
 				[118699] = "crowdControl",	-- Fear
 				[115268] = "crowdControl",	-- Mesmerize (Pet-Charm)
 				[6358] = "crowdControl",	-- Seduce (Pet-Charm)
 				[30108] = "usefulDebuffs",	-- Unstable Affliction		
-				
+				[104773] = "defCD",	        -- Unending Resolve
+				[110913] = "defCD",	        -- Dark Bargain
+
 				-- Warrior
 				[871] = "defCD", -- Shield Wall
 				[1719] = "offCD", -- Recklessness
