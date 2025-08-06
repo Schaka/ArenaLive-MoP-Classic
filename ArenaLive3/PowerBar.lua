@@ -92,6 +92,11 @@ function PowerBar:Update (unitFrame)
 	if ( not unit or powerBar.lockValues ) then
 		return;
 	end
+
+    if ( not UnitExists(unit) ) then
+        self:Reset(unitFrame)
+        return
+    end
 	
 	powerBar.disconnected = ( not UnitIsConnected(unit) and not unitFrame.test );
 	PowerBar:SetPowerType(unitFrame);
