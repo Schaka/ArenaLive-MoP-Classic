@@ -137,7 +137,7 @@ ArenaLive.spellDB = {
 				[49028] = "usefulBuffs",	-- Dancing Rune Weapon
 				
 				-- Druid
-				[33786] = "defCD",			-- Cyclone (Made that one a def CD, because the enemy is immune to everything during cyclone)
+				[33786] = "crowdControl",	-- Cyclone
 				[110617] = "defCD",			-- Deterrence (Symbiosis)
 				[102795] = "stun",			-- Bear Hug
 				[22570] = "stun",			-- Maim
@@ -277,7 +277,7 @@ ArenaLive.spellDB = {
 				[119072] = "crowdControl",	-- Holy Wrath
 				
 				-- Priest
-				[113506] = "defCD", 		-- Cyclone (Symbiosis) (Made that one a def CD, because the enemy is immune to everything during cyclone)
+				[113506] = "crowdControl", 	-- Cyclone (Symbiosis)
 				[33206] = "defCD",			-- Pain Suppression
 				[17] = "usefulBuffs",	    -- Power Word: Shield
 				[64843] = "usefulBuffs",	-- Divine Hymn
@@ -348,7 +348,7 @@ ArenaLive.spellDB = {
 				[58861] = "stun",			-- Bash (Spirit Wolf)
 
 				-- Warlock
-				[710] = "defCD",			-- Banish (It is marked as def CD for the same reason as Cyclone)
+				[710] = "crowdControl",		-- Banish
 				[113858] = "offCD",			-- Dark Soul: Instability
 				[113861] = "offCD",			-- Dark Soul: Knowledge
 				[113860] = "offCD",			-- Dark Soul: Misery
@@ -359,7 +359,7 @@ ArenaLive.spellDB = {
 				[24259] = "silence",		-- Spell lock (Pet-silence)
 				[115782] = "silence",		-- Optical Blast (Pet-silence)
 				[31117] = "silence",		-- Unstable Affliction (silence)
-				[111397] = "defCD", 		-- Blood Horror (buff)
+				[111397] = "usefulBuffs", 		-- Blood Horror (buff)
 				[137143] = "crowdControl",	-- Blood Horror
 				[5484] = "crowdControl",	-- Howl of Terror
 				[5782] = "crowdControl",	-- Fear

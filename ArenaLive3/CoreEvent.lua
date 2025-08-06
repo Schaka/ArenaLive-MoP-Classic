@@ -256,15 +256,15 @@ function ArenaLive:OnEvent(event, ...)
 
 	-- FIXME: combatlog events are different now
 	if ( event == "COMBAT_LOG_EVENT_UNFILTERED" or event == "COMBAT_LOG_EVENT" ) then
-		event2 = select(1, CombatLogGetCurrentEventInfo())
+		event2 = select(2, CombatLogGetCurrentEventInfo())
 		event2 = event.."_"..event2;
-	end	
+	end
 	
 	-- Supply objects with filtered combat log events:
 	if ( event2 and registeredObjects[event2] ) then
 		for object, methodName in pairs(registeredObjects[event2]) do
 			if ( object ~= "n" ) then
-				object[methodName]( object, event2, select(2, CombatLogGetCurrentEventInfo()));
+				object[methodName]( object, event2, CombatLogGetCurrentEventInfo());
 			end
 		end
 	end

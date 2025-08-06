@@ -26,7 +26,7 @@ local DEFAULT_X_OFFSET = 5;
 local DEFAULT_Y_OFFSET = 5;
 
 -- Variables for the duration of diminishing returns and a default CC duration:
-local DIMINISHING_RETURN_DURATION = 18;
+local DIMINISHING_RETURN_DURATION = 18.5;
 local DEFAULT_CC_DURATION = 9; -- 1 Seconds longer than actual max cc duration, so it won't proc before the cc actually finished.
 local NUMBER_DIMINISHING_RETURNS = 12; -- Number of different DR types currently in the game.
 
@@ -444,7 +444,6 @@ end
 
 
 function DRTracker:OnUpdate(elapsed)
-	
 	DRTracker.elapsed = DRTracker.elapsed + elapsed;
 	if ( DRTracker.elapsed >= THROTTLE_INTERVAL ) then
 		DRTracker.elapsed = 0;
