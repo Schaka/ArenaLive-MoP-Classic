@@ -886,6 +886,22 @@ function ArenaLiveUnitFrames:ToggleTestMode()
 	end
 end
 
+function ArenaLiveUnitFrames:Test()
+    local database = ArenaLive:GetDBComponent(addonName, "FrameMover");
+    if ( database.FrameLock ) then
+        print(addonName .. " Test function started for 60s")
+        database.FrameLock = false;
+        ArenaLiveUnitFrames:ToggleTestMode()
+        ArenaLive:TriggerEvent("ARENALIVE_UPDATE_MOVABILITY_BY_ADDON", addonName)
+
+        C_Timer.After(60, function()
+            database.FrameLock = true;
+            ArenaLiveUnitFrames:ToggleTestMode()
+            ArenaLive:TriggerEvent("ARENALIVE_UPDATE_MOVABILITY_BY_ADDON", addonName)
+        end)
+    end
+end
+
 function ArenaLiveUnitFrames:ToggleBlizzCastBar()
 	local database = ArenaLive:GetDBComponent(addonName);
 	if ( database.HideBlizzCastBar ) then
