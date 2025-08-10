@@ -87,8 +87,8 @@ function Portrait:Update(unitFrame)
 			
 			if ( numOpps and unitNumber and unitNumber <= numOpps ) then
 				local specID = GetArenaOpponentSpec(unitNumber)
-				-- seems to be in the game, not using C_SpecilizationInfo namepsace
-				local _, _, _, _, _, _, class = GetSpecializationInfoByID(specID)
+				-- seems to be in the game, not using C_SpecilizationInfo namespace
+				local id, name, description, icon, role, class, localizedClass = GetSpecializationInfoByID(specID)
 				
 				if ( class ) then
 					portrait.threeD:Hide();
