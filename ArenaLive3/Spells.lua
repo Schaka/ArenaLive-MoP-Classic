@@ -139,6 +139,7 @@ ArenaLive.spellDB = {
 				-- Druid
 				[33786] = "crowdControl",	-- Cyclone
 				[110617] = "defCD",			-- Deterrence (Symbiosis)
+				[110696] = "defCD",			-- Ice Block (Symbiosis)
 				[102795] = "stun",			-- Bear Hug
 				[22570] = "stun",			-- Maim
 				[5211] = "stun",			-- Mighty Bash

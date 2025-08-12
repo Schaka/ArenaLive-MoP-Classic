@@ -310,6 +310,10 @@ function UnitFrameClass:TestMode (mode)
 		self.test = nil;
 	end
 
+    if ( mode and self.unit == "player" ) then
+        self.test = 1
+    end
+
 	self:Update();
 	
 end
