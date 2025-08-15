@@ -90,7 +90,6 @@ function DRTracker:Update(unitFrame)
 	end
 
 	if ( unitFrame.test ) then
-		
 		for i = 1, loopMax do
 			local icon = drTracker["icon"..i];
 			if ( icon and i > maxIcons ) then

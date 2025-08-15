@@ -70,12 +70,12 @@ end
 		castHistory (Frame): The frame that is going to be set up as a cast history.
 ]]--
 function CastHistory:CreateIcon (unitFrame, castHistory)
-
+	
 	local icon = CreateFrame("Frame", nil, castHistory, "ArenaLive_CastHistoryIconTemplate");
-
+	
 	-- Set basic info:
 	icon.timesMoved = 0;
-
+	
 	-- NOTE: References for icon textures, animations etc. are set in the CastHistory.xml via parentKey="";
 		-- Texture: icon.texture
 		-- Border: icon.border
@@ -85,13 +85,13 @@ function CastHistory:CreateIcon (unitFrame, castHistory)
 		-- Move animation: icon.moveAnim
 			-- translation animation: icon.moveAnim.translation
 		-- Casting animation: icon.castAnim
-
+	
 	-- Update icon size and anchor etc.
 	CastHistory:UpdateIcon(unitFrame, icon);
-
+	
 	-- Update cast history:
 	castHistory.icons = castHistory.icons + 1;
-
+	
 	-- Set ID and create reference for the icon in the cast history frame:
 	icon:SetID(castHistory.icons);
 	castHistory["icon"..castHistory.icons] = icon;
@@ -101,7 +101,7 @@ function CastHistory:CreateIcon (unitFrame, castHistory)
 	icon.fadeOutAnim:SetScript("OnFinished", CastHistory.FinishIcon);
 	icon.castAnim:SetScript("OnFinished", CastHistory.FinishCastIcon);
 	icon.moveAnim:SetScript("OnFinished", CastHistory.MoveIcon);
-
+	
 	-- Return icon so it can be used:
 	return icon;
 end
@@ -111,17 +111,17 @@ end
 		icon (Frame): The icon that is going to be updated.
 ]]--
 function CastHistory:UpdateIcon (unitFrame, icon)
-
+	
 	local castHistory = icon:GetParent();
 	local database = ArenaLive:GetDBComponent(unitFrame.addon, self.name, unitFrame.group);
 	local size = database.Size;
 	local direction = database.Direction;
 	local point, translationX, translationY;
-
+	
 	-- Set icon and border size:
 	icon:SetSize(size, size);
 	icon.border:SetSize(size+1, size+1);
-
+	
 	-- Set point according to direction:
 	if ( direction == "LEFT" )  then
 		point = "RIGHT";
@@ -140,12 +140,12 @@ function CastHistory:UpdateIcon (unitFrame, icon)
 		point = "LEFT";
 		translationX, translationY = size*0.8, 0;
 	end
-
+	
 	-- Set icon anchor point and translation animation offset:
 	icon:ClearAllPoints();
 	icon:SetPoint(point, 0, 0);
 	icon.moveAnim.translation:SetOffset(translationX, translationY);
-
+	
 end
 
 function CastHistory.StartIcon (animationGroup, requested)
@@ -157,20 +157,20 @@ function CastHistory.StartIcon (animationGroup, requested)
 
 	icon:SetAlpha(1);
 	icon.expires = GetTime() + duration;
-
+	
 	-- Add icon to the list of active icons:
 	ActiveIcons[icon] = true;
 end
 
 function CastHistory.MoveIcon (animationGroup, requested)
-
+	
 	local icon = animationGroup:GetParent();
 	local unitFrame = icon:GetParent():GetParent(); -- Temporary fix until we've an OnUpdate based animation system.
 	local castHistory = icon:GetParent();
 	local size = icon:GetSize();
 	local database = ArenaLive:GetDBComponent(unitFrame.addon, "CastHistory", unitFrame.group);
 	local direction = database.Direction;
-
+	
 	-- Get new position and transition values:
 	local point, relativeTo, relativePoint, xOffset, yOffset, translationX, translationY = icon:GetPoint();
 	if ( direction == "LEFT" ) then
@@ -185,11 +185,11 @@ function CastHistory.MoveIcon (animationGroup, requested)
 	elseif ( direction == "DOWN" ) then
 		xOffset, yOffset = 0, (-size - DEFAULT_Y_MOD) * icon.timesMoved;
 		translationX, translationY = 0, -size*0.8;
-	end
+	end	
 
 	-- Reset move animation's xOffset to default:
 	icon.moveAnim.translation:SetOffset(translationX, translationY);
-
+	
 	-- Set new position:
 	icon:ClearAllPoints();
 	icon:SetPoint(point, relativeTo, relativePoint, xOffset, yOffset);
@@ -199,19 +199,19 @@ function CastHistory.FinishIcon (animationGroup, requested)
 	local icon = animationGroup:GetParent();
 	local ID = icon:GetID();
 	local castHistory = icon:GetParent();
-
+	
 	CastHistory:ResetIcon(icon);
-
+	
 	-- Change the next icon number, if it is larger than the current icon's ID.
 	if ( castHistory.next > ID ) then
 		castHistory.next = ID;
 	end
-
+	
 end
 
 function CastHistory.FinishCastIcon (animationGroup, requested)
 	local icon = animationGroup:GetParent();
-
+	
 	if ( icon.fading ) then
 		icon.fadeOutAnim:Play();
 	else
@@ -221,23 +221,23 @@ end
 
 function CastHistory:ResetIcon (icon)
 	icon:Hide();
-
+	
 	-- Remove icon from active icons table:
 	ActiveIcons[icon] = nil;
-
+	
 	-- Reset icon style:
 	icon:SetAlpha(1);
 	icon.texture:SetTexture();
 	icon.border:SetVertexColor(1, 1, 1, 1);
 	icon.border:Hide();
 	icon.lockOut:Hide();
-
+	
 	-- Reset all control variables to their initial state:
 	icon.timesMoved = 0;
 	icon.expires = nil;
 	icon.fading = nil;
 	icon.spellID = nil;
-
+	
 	-- Stop animations:
 	icon.castAnim:Stop();
 	icon.moveAnim:Stop();
@@ -268,7 +268,7 @@ function CastHistory:Reset (unitFrame)
 	for i = 1, castHistory.icons do
 		local icon = castHistory["icon"..i];
 		CastHistory:ResetIcon(icon);
-	end
+	end	
 end
 
 function CastHistory:Rotate (unitFrame, event, spellID, lineID)
@@ -291,14 +291,14 @@ function CastHistory:Rotate (unitFrame, event, spellID, lineID)
 			dontMove = nil;
 		end
 	end
-
+	
 	-- If the next icon doesn't exist we need to create it:
 	if ( castHistory.next > castHistory.icons ) then
 		icon = CastHistory:CreateIcon(unitFrame, castHistory);
 	else
 		icon = castHistory["icon"..castHistory.next];
 	end
-
+	
 	-- Fallback if the icon is already in use:
 	if ( icon:IsShown() ) then
 		--ArenaLive:Message(L["Chosen icon is already in use, searching for free icon..."], "debug");
@@ -314,47 +314,47 @@ function CastHistory:Rotate (unitFrame, event, spellID, lineID)
 
 	-- Set up new icon:
 	icon.spellID = spellID;
-
+	
 	-- The PvP trinket's spell has a different icon than the trinket itself. So we replace it here with the correct one:
 	if ( spellID == ArenaLive.spellDB.Trinket[1] ) then
 		local _, faction = UnitFactionGroup(unit);
-
+					
 		if ( faction == "Alliance" ) then
 			texture = ("Interface\\ICONS\\INV_Jewelry_TrinketPVP_01");
 		else
 			texture = ("Interface\\ICONS\\INV_Jewelry_TrinketPVP_02");
 		end
-	end
-
+	end	
+	
 	icon.texture:SetTexture(texture);
 	icon:SetAlpha(0);
 	CastHistory:UpdateIcon(unitFrame, icon);
 	icon:Show();
-
+	
 	if ( event == "UNIT_SPELLCAST_START" or event == "UNIT_SPELLCAST_CHANNEL_START" ) then
 		castHistory.castingIcon = icon;
 		icon.castAnim:Play();
 	elseif ( event == "UNIT_SPELLCAST_SUCCEEDED" ) then
 		icon.fadeInAnim:Play();
 	end
-
+	
 	-- Update next and last entries:
 	castHistory.next = icon:GetID() + 1;
 	castHistory.last = icon:GetID();
-
+	
 	if ( not dontMove ) then
 		-- Move all old active icons:
 		for i = 1, castHistory.icons do
 			icon = castHistory["icon"..i];
-
+			
 			-- Ignore inactive icons and the icon we've just set up:
 			if ( i ~= castHistory.last and icon:IsShown() ) then
 				icon.timesMoved = icon.timesMoved + 1;
-
+				
 				if ( icon.moveAnim:IsPlaying() ) then
 					-- If the icon is already moving we simply increase its offset:
 					local xOffset, yOffset = icon.moveAnim.translation:GetOffset();
-
+					
 					if ( direction == "LEFT" ) then
 						xOffset = xOffset - size*0.8;
 					elseif ( direction == "RIGHT" ) then
@@ -364,12 +364,12 @@ function CastHistory:Rotate (unitFrame, event, spellID, lineID)
 					elseif ( direction == "DOWN" ) then
 						yOffset = yOffset - size*0.8;
 					end
-
+					
 					icon.moveAnim.translation:SetOffset(xOffset, yOffset);
 				else
 					icon.moveAnim:Play();
 				end
-
+				
 				if ( icon.timesMoved >= maxIcons and not icon.fadeOutAnim:IsPlaying() ) then
 					icon.fadeOutAnim:Play();
 				end
@@ -379,13 +379,13 @@ function CastHistory:Rotate (unitFrame, event, spellID, lineID)
 end
 
 function CastHistory:StartCast (unitFrame, event, spellID, lineID)
-
+	
 	local castHistory = unitFrame[self.name];
 	-- If we're already channeling the same spell, ignore the new one:
 	if ( event == "UNIT_SPELLCAST_CHANNEL_START" and castHistory.channeling and spellID == castHistory.spellID ) then
 		return;
 	end
-
+	
 	if ( event == "UNIT_SPELLCAST_START" ) then
 		castHistory.casting = true;
 		castHistory.channeling = nil;
@@ -393,7 +393,7 @@ function CastHistory:StartCast (unitFrame, event, spellID, lineID)
 		castHistory.channeling = true;
 		castHistory.casting = nil;
 	end
-
+	
 	castHistory.spellID = spellID;
 	castHistory.lineID = lineID;
 	CastHistory:Rotate(unitFrame, event, spellID, lineID);
@@ -409,25 +409,25 @@ function CastHistory:StopCast (castHistory, event, lineID)
 	if ( not icon ) then
 		return;
 	end
-
+	
 	if ( event == "UNIT_SPELLCAST_STOP" ) then
 		icon.fading = true;
 	else
 		icon.fading = nil;
 	end
-
+	
 	castHistory.castingIcon = nil;
 	castHistory.lastCastingIcon = icon;
 	castHistory.casting = nil;
 	castHistory.channeling = nil;
 	castHistory.spellID = nil;
 	castHistory.lineID = nil;
-
+	
 	icon.castAnim:Finish();
 end
 
 function CastHistory:SuccessfulCast (unitFrame, spellID, lineID)
-
+	
 	local castHistory = unitFrame[self.name];
 	if ( not castHistory.channeling and not castHistory.casting and not ArenaLive.spellDB.FilteredSpells[spellID] ) then
 		-- Instant cast:
@@ -447,13 +447,13 @@ end
 function CastHistory:LockOutCast (castHistory, spellID)
 
 	local icon = castHistory.lastCastingIcon;
-
+	
 	if ( icon and icon.fading and icon.spellID and icon.spellID == spellID ) then
-		castHistory.lastCastingIcon = nil;
+		castHistory.lastCastingIcon = nil; 
 		icon.fading = nil;
 		icon.border:Show();
 		icon.border:SetVertexColor(1, 0, 0, 1);
-		icon.lockOut:Show();
+		icon.lockOut:Show();		
 	end
 
 end
@@ -461,26 +461,26 @@ end
 function CastHistory:UpdateBorder (castHistory, spellID, destGUID)
 
 	local icon = castHistory["icon"..castHistory.last];
-
+	
 	if ( icon and icon.spellID and spellID == icon.spellID ) then
 		local _, class;
 		if ( destGUID and destGUID~= "" and destGUID ~= "0x0000000000000000" ) then
 			_, class = GetPlayerInfoByGUID(destGUID);
 		end
-
+		
 		if ( class ) then
 			icon.border:Show();
 			icon.border:SetVertexColor(RAID_CLASS_COLORS[class].r, RAID_CLASS_COLORS[class].g, RAID_CLASS_COLORS[class].b, 1);
 		else
 			icon.border:Hide();
-		end
-
+		end		
+		
 	end
 
 end
 
 function CastHistory:OnEvent (event, ...)
-
+	
 	local unit, lineID, spellID = ...;
 	if ( event == "UNIT_SPELLCAST_START" or event == "UNIT_SPELLCAST_CHANNEL_START" ) then
 		if ( ArenaLive:IsUnitInUnitFrameCache(unit) ) then
@@ -519,7 +519,7 @@ function CastHistory:OnEvent (event, ...)
 				if ( unitFrame[self.name] and unitFrame[self.name]["enabled"] ) then
 					CastHistory:UpdateBorder(unitFrame[self.name], spellID, destGUID);
 				end
-			end
+			end	
 		end
 	elseif ( event == "COMBAT_LOG_EVENT_UNFILTERED_SPELL_INTERRUPT" ) then
 		local destGUID = select(8, ...);
@@ -530,7 +530,7 @@ function CastHistory:OnEvent (event, ...)
 				if ( unitFrame[self.name] and unitFrame[self.name]["enabled"] ) then
 					CastHistory:LockOutCast(unitFrame[self.name], spellID);
 				end
-			end
+			end	
 		end
 	end
 
@@ -538,7 +538,7 @@ end
 
 function CastHistory:OnUpdate (elapsed)
 	CastHistory.elapsed = CastHistory.elapsed + elapsed;
-
+	
 	if ( CastHistory.elapsed >= THROTTLE_INTERVAL ) then
 		local theTime = GetTime();
 		CastHistory.elapsed = 0;
@@ -572,7 +572,7 @@ CastHistory.optionSets = {
 		["title"] = L["Icon Size"],
 		["tooltip"] = L["Sets the size of the cast history icons."],
 		["width"] = 100,
-		["height"] = 17,
+		["height"] = 17,		
 		["min"] = 1,
 		["max"] = 64,
 		["step"] = 1,
@@ -612,7 +612,7 @@ CastHistory.optionSets = {
 		["title"] = L["Icon Duration"],
 		["tooltip"] = L["Sets the time in seconds until a cast history icon fades."],
 		["width"] = 28,
-		["height"] = 20,
+		["height"] = 20,		
 		["maxLetters"] = 2,
 		["inputType"] = "NUMERIC",
 		["GetDBValue"] = function (frame) local database = ArenaLive:GetDBComponent(frame.addon, frame.handler, frame.group); return database.IconDuration; end,
@@ -624,7 +624,7 @@ CastHistory.optionSets = {
 		["title"] = L["Shown Icons"],
 		["tooltip"] = L["Sets the maximal number of cast history icons that are shown simultaneously."],
 		["width"] = 100,
-		["height"] = 17,
+		["height"] = 17,		
 		["min"] = 1,
 		["max"] = 10,
 		["step"] = 1,

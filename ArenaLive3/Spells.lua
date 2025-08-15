@@ -139,7 +139,6 @@ ArenaLive.spellDB = {
 				-- Druid
 				[33786] = "crowdControl",	-- Cyclone
 				[110617] = "defCD",			-- Deterrence (Symbiosis)
-				[110696] = "defCD",			-- Ice Block (Symbiosis)
 				[102795] = "stun",			-- Bear Hug
 				[22570] = "stun",			-- Maim
 				[5211] = "stun",			-- Mighty Bash
@@ -167,13 +166,14 @@ ArenaLive.spellDB = {
 
 				-- Hunter
 				[136] = "usefulBuffs",		-- Mend Pet
+				[80003] = "usefulDebuffs",	-- Black Arrow
 				[5384] = "defCD",			-- Feign Death
 				[19263] = "defCD",			-- Deterrence
 				[117526] = "stun",			-- Binding Shot
 				[131894] = "usefulBuffs",	-- Murder of Crows
 				[128405] = "root",			-- Narrow Escape
 				[19574] = "usefulBuffs",	-- Beastial Wrath
-				[53480] = "defCD",			-- Roar of Sacrifice
+				[53480] = "root",	        -- Roar of Sacrifice
 				[19577] = "stun",			-- Intimidation (stun)			
 				[90337] = "stun",			-- Bad Manner (Monkey Pet)
 				[126246] = "stun",			-- Lullaby (Crane Pet)
