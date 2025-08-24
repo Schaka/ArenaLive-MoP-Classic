@@ -16,6 +16,7 @@ local addonName, L = ...;
 local ComboFrame = ArenaLive:ConstructHandler("ComboFrame", true, true);
 ComboFrame:RegisterEvent("PLAYER_TARGET_CHANGED");
 ComboFrame:RegisterEvent("COMBO_TARGET_CHANGED");
+ComboFrame:RegisterEvent("UNIT_POWER_UPDATE");
 
 local COMBO_POINT_FADEIN = 0.3;
 local fadingComboPoints = {};
@@ -112,8 +113,8 @@ function ComboFrame:ResetSingle(comboPoint)
 end
 
 function ComboFrame:OnEvent(event, ...)
-	local unit = ...;
-	if ( event == "PLAYER_TARGET_CHANGED" or ( event == "UNIT_COMBO_POINTS" and unit == "player" ) ) then
+	local unit, arg2 = ...;
+	if ( event == "PLAYER_TARGET_CHANGED" or ( event == "UNIT_POWER_UPDATE" and arg2 == "COMBO_POINTS" and unit == "player" ) ) then
 		for id, unitFrame in ArenaLive:GetAllUnitFrames() do
 			if ( unitFrame[self.name] ) then
 				ComboFrame:Update(unitFrame);

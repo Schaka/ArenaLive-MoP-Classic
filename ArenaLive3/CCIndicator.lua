@@ -19,6 +19,7 @@ CCIndicator.canToggle = true;
 CCIndicator:RegisterEvent("UNIT_AURA", "UpdateCache");
 CCIndicator:RegisterEvent("PLAYER_TARGET_CHANGED", "UpdateCache");
 CCIndicator:RegisterEvent("PLAYER_FOCUS_CHANGED", "UpdateCache");
+CCIndicator:RegisterEvent("ADDON_LOADED", "ADDON_LOADED");
 
 -- Create CC cache. This will be sorted by unitID and inside the unitID table by spellID:
 local unitCCCache = {};
@@ -50,7 +51,7 @@ function CCIndicator:ConstructObject (indicator, texture, cooldown, addonName)
 	
 	-- Set up cooldown (without frameType, as I want to store cooldown options per addon and not per frame type):
 	ArenaLive:ConstructHandlerObject(cooldown, "Cooldown", addonName, indicator);
-	
+
 end
 
 function CCIndicator:OnEnable (unitFrame)
@@ -82,7 +83,10 @@ function CCIndicator:Update (unitFrame)
             local icon = bigDebuffsFrame.current
 
             indicator.texture:SetTexture(icon);
-            indicator.cooldown:Set(startTime / 1000, duration  / 1000);
+            -- custom duration set to 1 for auras like smokebomb, druid forms etc
+            if duration > 1000 then
+                indicator.cooldown:Set(startTime / 1000, duration  / 1000);
+            end
             indicator:Show();
             return
         end
@@ -220,6 +224,22 @@ function CCIndicator:UpdateCache (event, unit)
 	end
 end
 
+function CCIndicator:ADDON_LOADED (event, addonName)
+    if addonName == "BigDebuffs" then
+        print("BigDebuffs loaded, ArenaLive will use it instead of of its own CCIndicator")
+        hooksecurefunc(BigDebuffs, "UNIT_AURA", function(frame, unit, spellId)
+            if ArenaLive:GetAffectedUnitFramesByUnit(unit) then
+                for id in ArenaLive:GetAffectedUnitFramesByUnit(unit) do
+                    local unitFrame = ArenaLive:GetUnitFrameByID(id);
+                    if ( unitFrame[self.name] ) then
+                         -- we need to wait for BigDebuffs to update successfully first
+                         CCIndicator:Update(unitFrame);
+                    end
+                end
+            end
+        end)
+    end
+end
 
 --[[
 ****************************************
