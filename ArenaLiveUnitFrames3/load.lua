@@ -818,13 +818,13 @@ ArenaLiveUnitFrames.defaults = {
 		},
 		["CCIndicator"] =	{
 			["Priorities"] = {
-				["defCD"] = 9,
-				["offCD"] = 3,
+				["crowdControl"] = 9,
 				["stun"] = 8,
 				["silence"] = 7,
-				["crowdControl"] = 6,
+				["defCD"] = 6,
 				["root"] = 5,
-				["disarm"] = 4,
+				["offCD"] = 4,
+				["disarm"] = 3,
 				["usefulBuffs"] = 2,
 				["usefulDebuffs"] = 1,
 			},

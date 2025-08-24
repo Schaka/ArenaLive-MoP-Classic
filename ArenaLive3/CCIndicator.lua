@@ -69,6 +69,24 @@ function CCIndicator:Update (unitFrame)
 	if ( not unit or not indicator.enabled ) then
 		return;
 	end
+
+    -- if BigDebuffs is enabled, we "steal" spell data
+    -- it has support for a lot more stuff than ArenaLive directly and adding anchor support for ArenaLive to BigDebuffs makes less sense imo
+    if IsAddOnLoaded("BigDebuffs") then
+        local bigDebuffsFrame = BigDebuffs.UnitFrames[unit] or BigDebuffs.Nameplates[unit]
+
+        -- only read values if the frame is in use
+        if bigDebuffsFrame and bigDebuffsFrame:IsShown() then
+            local cd = bigDebuffsFrame.cooldown
+            local startTime, duration = cd:GetCooldownTimes()
+            local icon = bigDebuffsFrame.current
+
+            indicator.texture:SetTexture(icon);
+            indicator.cooldown:Set(startTime / 1000, duration  / 1000);
+            indicator:Show();
+            return
+        end
+    end
 	
 	local priority, highestID, highestPriority, highestExpires;
 	local database = ArenaLive:GetDBComponent(unitFrame.addon, self.name);

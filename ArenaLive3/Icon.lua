@@ -21,6 +21,8 @@ local Icon = ArenaLive:ConstructHandler("Icon", true, false);
 Icon.multiple = true;
 
 Icon:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
+Icon:RegisterEvent("ARENA_OPPONENT_UPDATE");
+Icon:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS");
 Icon:RegisterEvent("UNIT_FACTION");
 Icon:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 Icon:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED_SPELL_DISPEL");
@@ -409,7 +411,8 @@ function Icon:SetTexture(frame, icon, iconType)
 			-- Retrieve arena opponent data:
 			local numOpps = GetNumArenaOpponentSpecs();
 			local _, instanceType = IsInInstance();
-			
+			-- GetNumArenaOpponentSpecs()
+
 			if ( numOpps and unitNumber and unitNumber <= numOpps ) then
 				-- We're inside the arena and can track spec info:
 				specID = GetArenaOpponentSpec(unitNumber);
@@ -606,6 +609,16 @@ function Icon:OnEvent(event, ...)
 				Icon:Update(frame, "specialisation");
 			end
 		end
+    elseif ( event == "ARENA_OPPONENT_UPDATE" or event == "ARENA_PREP_OPPONENT_SPECIALIZATIONS" ) then
+    		-- Update all frames that show the player:
+    		local unit, unitEvent = ...;
+    		local playerGUID = UnitGUID(unit);
+    		if ( ArenaLive:IsGUIDInUnitFrameCache(playerGUID) ) then
+    			for id, isRegistered in ArenaLive:GetAffectedUnitFramesByGUID(playerGUID) do
+    				local frame = ArenaLive:GetUnitFrameByID(id);
+    				Icon:Update(frame, "specialisation");
+    			end
+    		end
 	elseif ( event == "UNIT_FACTION" ) then
 		local unit = ...;
 		if ( ArenaLive:IsUnitInUnitFrameCache(unit) ) then

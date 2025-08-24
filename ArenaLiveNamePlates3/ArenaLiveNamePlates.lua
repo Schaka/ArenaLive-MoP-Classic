@@ -38,7 +38,6 @@ local addonName, L = ...;
 local ArenaLiveNamePlatesFrame = CreateFrame("Frame", "ArenaLiveNamePlates3", UIParent)
 ArenaLiveNamePlatesFrame.defaults = {
 	["FirstLogin"] = true,
-	["Version"] = "3.2.3b",
 	["Cooldown"] =	{
 		["ShowText"] = true,
 		["StaticSize"] = false,
@@ -46,15 +45,15 @@ ArenaLiveNamePlatesFrame.defaults = {
 	},
 	["CCIndicator"] =	{
 		["Priorities"] = {
-			["defCD"] = 9,
-			["offCD"] = 3,
+			["crowdControl"] = 9,
 			["stun"] = 8,
 			["silence"] = 7,
-			["crowdControl"] = 6,
-			["root"] = 5,
-			["disarm"] = 4,
-			["usefulBuffs"] = 0,
-			["usefulDebuffs"] = 0,
+			["defCD"] = 6,
+			["offCD"] = 5,
+			["root"] = 4,
+			["disarm"] = 3,
+			["usefulDebuffs"] = 2,
+			["usefulBuffs"] = 1,
 		},
 	},
 	["NamePlate"] = {
