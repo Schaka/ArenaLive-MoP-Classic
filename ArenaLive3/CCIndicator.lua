@@ -86,8 +86,13 @@ function CCIndicator:Update (unitFrame)
             -- custom duration set to 1 for auras like smokebomb, druid forms etc
             if duration > 1000 then
                 indicator.cooldown:Set(startTime / 1000, duration  / 1000);
+            else
+                indicator.cooldown:Set(0,0);
             end
             indicator:Show();
+            return
+        elseif not bigDebuffsFrame or not bigDebuffsFrame:IsShown() then
+            indicator:Hide();
             return
         end
     end

@@ -94,6 +94,7 @@ NamePlate:RegisterEvent("UNIT_HEAL_PREDICTION");
 NamePlate:RegisterEvent("NAME_PLATE_CREATED");
 NamePlate:RegisterEvent("NAME_PLATE_UNIT_ADDED");
 NamePlate:RegisterEvent("NAME_PLATE_UNIT_REMOVED");
+NamePlate:RegisterEvent("ADDON_LOADED");
 
 -- Set Attributes:
 NamePlate.unitNameCache = {};
@@ -294,6 +295,17 @@ function NamePlate:OnEvent(event, ...)
         local namePlate = self.namePlates[unitFrame];
         namePlate:UpdateUnit(nil);
         namePlate:Update();
+    elseif (event == "ADDON_LOADED" ) then
+        local addonName = ...
+        if addonName == "BigDebuffs" then
+            hooksecurefunc(BigDebuffs, "UNIT_AURA_NAMEPLATE", function(frame, unit)
+                for blizzPlate, namePlate in pairs(self.namePlates) do
+                    if ( unit == namePlate.unit ) then
+                        CCIndicator:Update(namePlate);
+                    end
+                end
+            end)
+        end
 	end
 end
 
